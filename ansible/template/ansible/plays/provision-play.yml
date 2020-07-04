@@ -1,0 +1,17 @@
+- name: "Provisioning of basic environment for python and jupyter server"
+  hosts: aws_ec2
+  remote_user: ubuntu
+  vars_files:
+    - ../config/vars.yml
+
+  roles:
+    - role: ebs_volume
+
+    - role: install_python
+      vars:
+        python_version: "{{ python.version }}"
+      when: python.install
+
+    - role: basic_ml_environment
+      vars:
+        tensorboard_logdir: "{{ experiment.results.dir }}"

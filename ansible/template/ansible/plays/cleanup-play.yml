@@ -1,0 +1,15 @@
+- name: Upload results
+  hosts: aws_ec2
+  remote_user: ubuntu
+  vars_files:
+    - ../config/vars.yml
+
+  roles:
+    - role: s3_upload
+      vars:
+        src_dir: "{{ experiment.results.dir }}"
+        dst_dir: "{{ experiment.name }}"
+        dst_bucket: "{{ experiment.results.bucket }}"
+      when: experiment.results.save
+
+    - role: ec2_down
