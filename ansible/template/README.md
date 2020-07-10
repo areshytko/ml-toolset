@@ -31,6 +31,12 @@ Run inside this folder:
 source ./activate
 ```
 
+#### Setup MLLab
+
+```
+export PYTHONPATH=<path to mllab package>:$PYTHONPATH
+```
+
 ### Setup cluster
 
 Run inside this folder:

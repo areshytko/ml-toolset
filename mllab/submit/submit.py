@@ -64,6 +64,12 @@ def main(command: str, mode: str, with_runbook: bool, params: List[str], run_con
     workers = [x for x in hosts if x.startswith('worker') and x != 'worker0']
     master = 'worker0'
 
+    print(
+        f"Submitting the job via {mode} mode\n"
+        f"Running {'with' if with_runbook else 'without'} the the runbook\n"
+        f"Run config: {run_config}"
+    )
+
     if with_runbook:
         runbook_dst = RunConfig(run_config).results_dir
         upload_runbook(Connection(master, config=config), dst=runbook_dst)
@@ -97,6 +103,7 @@ def run(con: Connection,
 
 
 def upload_runbook(con: Connection, dst: str):
+    print("Uploading runbook to the master node results dir ...")
     try:
         create_runbook(RUNBOOK_PATH, setup_file=README_PATH)
         con.run(f"mkdir -p {dst}")
@@ -109,6 +116,7 @@ def upload_runbook(con: Connection, dst: str):
 
 def distribute_code(mode: CodeDistributionMode, connection: Connection, dst: str):
     if mode == CodeDistributionMode.SYNC:
+        print("Syncing the source folder ..")
         src = pathlib.Path().absolute() / '*'
         rsync(connection, str(src), dst, exclude=['.git', '__pycache__', 'outputs'])
     else:
