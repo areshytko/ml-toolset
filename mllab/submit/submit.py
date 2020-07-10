@@ -99,7 +99,7 @@ def run(con: Connection,
 def upload_runbook(con: Connection, dst: str):
     try:
         create_runbook(RUNBOOK_PATH, setup_file=README_PATH)
-        con.run(f"mkdir {dst}")
+        con.run(f"mkdir -p {dst}")
         con.put(README_PATH, dst)
         con.put(RUNBOOK_PATH, dst)
     finally:
