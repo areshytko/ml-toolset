@@ -18,6 +18,11 @@ from mllab.submit.runbook import create_runbook
 RUNBOOK_PATH = 'runbook.md'
 
 
+class CodeDistributionMode(Enum):
+    SYNC = 1
+    PUSH_PULL = 2
+
+
 class RunConfig:
     """
     Parser of environment config file
@@ -39,11 +44,15 @@ class RunConfig:
     def pip(self) -> str:
         return str(pathlib.Path(self.config['python']['virtualenv']) / 'bin' / 'pip')
 
+    @property
+    def results_dir(self) -> str:
+        return self.config['experiment']['results']['dir']
+
 
 @click.command()
 @click.option('--config', '-c', 'run_config', type=click.Path(exists=True), default='./ansible/config/vars.yml',
               help='Ansible variable file for the experiment lab cluster')
-@click.option('--mode', '-m', type=click.Choice(['sync', 'push_pull']), case_sensitive=False)
+@click.option('--mode', '-m', type=click.Choice(['sync', 'push_pull'], case_sensitive=False), default='sync')
 @click.option('--with-runbook', '-r', is_flag=True)
 @click.argument('command', type=str)
 @click.argument('params', nargs=-1, type=str)
@@ -55,7 +64,7 @@ def main(command: str, mode: str, with_runbook: bool, params: List[str], run_con
     master = 'worker0'
 
     if with_runbook:
-        runbook_dst = run_config['experiment']['results']['dir']
+        runbook_dst = RunConfig(run_config).results_dir
         upload_runbook(Connection(master, config=config), dst=runbook_dst)
 
     results = [run(Connection(host, config=config), mode, command, params, run_config, asynchronous=True)
@@ -89,15 +98,11 @@ def run(con: Connection,
 def upload_runbook(con: Connection, dst: str):
     try:
         create_runbook(RUNBOOK_PATH)
+        con.run(f"mkdir {dst}")
         con.put(RUNBOOK_PATH, dst)
     finally:
         if os.path.exists(RUNBOOK_PATH):
             os.remove(RUNBOOK_PATH)
-
-
-class CodeDistributionMode(Enum):
-    SYNC = 1
-    PUSH_PULL = 2
 
 
 def distribute_code(mode: CodeDistributionMode, connection: Connection, dst: str):
