@@ -1,0 +1,18 @@
+# Runbook
+
+*This document describes how to reproduce the given experiment run.*
+
+To repdocude you need to:
+1. Setup the environment
+2. Run the experiment
+
+## Setup the environment
+
+For the instructions how to setup the environment, please, follow [this link]($setup_document)
+
+## Run the experiment
+
+To run the experiment:
+
+1. checkout git commit: `git checkout $git_commit`
+2. submit the job: `$command`
