@@ -6,6 +6,21 @@ Copy contents of this folder and use as a template for your experiment.
 
 ### Initialize
 
+#### Setup codebase
+
+- Clone the git repository:
+
+```
+git clone git@github.com:areshytko/ml-toolset.git
+cd ml-toolset
+```
+
+- Checkout experiment Git branch
+
+```
+git checkout <experiment branch>
+```
+
 #### Setup AWS
 
 - Setup AWS API credentials:
