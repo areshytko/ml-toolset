@@ -16,6 +16,7 @@ from patchwork.transfers import rsync
 from mllab.submit.runbook import create_runbook
 
 RUNBOOK_PATH = 'runbook.md'
+README_PATH = 'README.md'
 
 
 class CodeDistributionMode(Enum):
@@ -97,8 +98,9 @@ def run(con: Connection,
 
 def upload_runbook(con: Connection, dst: str):
     try:
-        create_runbook(RUNBOOK_PATH)
+        create_runbook(RUNBOOK_PATH, setup_file=README_PATH)
         con.run(f"mkdir {dst}")
+        con.put(README_PATH, dst)
         con.put(RUNBOOK_PATH, dst)
     finally:
         if os.path.exists(RUNBOOK_PATH):

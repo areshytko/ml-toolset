@@ -30,8 +30,7 @@ def create_runbook(result_path: str,
     ------
     GitStatusException
     """
-    #run_str = ' '.join(sys.argv)
-    run_str = 'run command'
+    run_str = ' '.join(sys.argv)
     commit, is_dirty = get_git_status()
 
     if is_dirty and not allow_dirty:
