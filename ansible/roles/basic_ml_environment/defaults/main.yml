@@ -4,7 +4,7 @@ python:
 
 install_packages:
   - ipython
-  - jupyterlab
+  - jupyterlab==3.0.7
   - tensorboard==2.2.1
   - awscli
 

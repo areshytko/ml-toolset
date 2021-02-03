@@ -18,7 +18,7 @@
 - name: Wait until jupyter server is started
   wait_for:
     path: jupyter.log
-    search_regex: "Jupyter Notebook is running"
+    search_regex: "To access the server, open this file in a browser"
 - name: Get jupyter server logs
   shell: cat jupyter.log
   register: jupyter_output
